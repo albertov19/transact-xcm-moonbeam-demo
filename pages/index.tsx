@@ -108,7 +108,7 @@ const XCMTransactorDemo = () => {
           setWsEndpoint(input.target.value);
         }}
       />
-      <i>Manta endpoint for Testnet is wss://c1.manta.moonsea.systems</i>
+      <i>Manta endpoint for Testnet is: wss://c1.manta.moonsea.systems</i>
       <br />
       <br />
       <Input
@@ -119,7 +119,7 @@ const XCMTransactorDemo = () => {
           setXC20Address(input.target.value);
         }}
       />
-      <i>Manta endpoint for Testnet is 0xfFFffFFf7D3875460d4509eb8d0362c611B4E841</i>
+      <i>Manta XC-20 Address on Moonbase Alpha is: 0xfFFffFFf7D3875460d4509eb8d0362c611B4E841</i>
       <br />
       <br />
       <Input
@@ -130,14 +130,14 @@ const XCMTransactorDemo = () => {
           setDestAddress(input.target.value);
         }}
       />
-      <i>Demo Address dfbrJKcsxJMABUnuNq5h625HJMq1WehaNxR6Hz5twJorVSWAT</i>
+      <i>Demo Address for Transfer is: dfbrJKcsxJMABUnuNq5h625HJMq1WehaNxR6Hz5twJorVSWAT</i>
 
       <br />
       <br />
-      {{ connected }.connected && wsEndpoint ? (
+      {{ connected }.connected && wsEndpoint && xc20Address && destAddress ? (
         <DemoComponent account={account} wsEndpoint={wsEndpoint} xc20Address={xc20Address} destAddress={destAddress} />
       ) : (
-        <h3>Connect Metamask or Provide Endpoint</h3>
+        <h3>Connect Metamask and Provide: WsEndpoint, XC-20 Address and Transfer Destination Address on Manta</h3>
       )}
       <br />
     </Container>

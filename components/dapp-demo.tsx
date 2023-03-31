@@ -13,6 +13,7 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
   const [api, setAPI] = useState();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [buttonDisabled, setButtonDisabled] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
@@ -23,6 +24,7 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
       // Calculate Contract MLD Account
       const mldAccount = await calculateMLDA(account, api);
       setContractMLDA(mldAccount);
+      setButtonDisabled(false);
     };
 
     loadData();
@@ -180,17 +182,38 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
       <Form error={!!{ errorMessage }.errorMessage}>
         <h4>Transfer XC-20 to MLD Account on Manta</h4>
         <p>Destination Address (MultiLocation Derivative on Manta): {contractMLDA}</p>
-        <Button icon labelPosition='left' color='orange' onClick={sendTransfer} loading={loading}>
+        <Button
+          icon
+          labelPosition='left'
+          color='orange'
+          disabled={buttonDisabled}
+          onClick={sendTransfer}
+          loading={loading}
+        >
           <Icon name='arrow alternate circle right'></Icon>
           Transfer
         </Button>
         <h4>Remote Transact on Manta</h4>
-        <Button icon labelPosition='left' color='orange' onClick={sendTransact} loading={loading}>
+        <Button
+          icon
+          labelPosition='left'
+          color='orange'
+          disabled={buttonDisabled}
+          onClick={sendTransact}
+          loading={loading}
+        >
           <Icon name='microchip'></Icon>
           Transact
         </Button>
         <h4>Batch All Actions into One Tx</h4>
-        <Button icon labelPosition='left' color='orange' onClick={batchCall} loading={loading}>
+        <Button
+          icon
+          labelPosition='left'
+          color='orange'
+          disabled={buttonDisabled}
+          onClick={batchCall}
+          loading={loading}
+        >
           <Icon name='shipping fast'></Icon>
           Batch All!
         </Button>
