@@ -181,7 +181,15 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
     <Container>
       <Form error={!!{ errorMessage }.errorMessage}>
         <h4>Transfer XC-20 to MLD Account on Manta</h4>
-        <p>Destination Address (MultiLocation Derivative on Manta): {contractMLDA}</p>
+        <p>
+          Destination Address (MultiLocation Derivative on Manta): {contractMLDA}
+          <br />
+          Code for this segment is here: &nbsp;
+          <a href='https://github.com/albertov19/transact-xcm-moonbeam-demo/blob/main/components/dapp-demo.tsx#L39-L46'>
+            here
+          </a>
+        </p>
+
         <Button
           icon
           labelPosition='left'
@@ -194,6 +202,12 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
           Transfer
         </Button>
         <h4>Remote Transact on Manta</h4>
+        <p>
+          Code for this segment is here: &nbsp;
+          <a href='https://github.com/albertov19/transact-xcm-moonbeam-demo/blob/main/components/dapp-demo.tsx#L61-L77'>
+            here
+          </a>
+        </p>
         <Button
           icon
           labelPosition='left'
@@ -206,6 +220,12 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
           Transact
         </Button>
         <h4>Batch All Actions into One Tx</h4>
+        <p>
+          Code for this segment is here: &nbsp;
+          <a href='https://github.com/albertov19/transact-xcm-moonbeam-demo/blob/main/components/dapp-demo.tsx#L92-L122'>
+            here
+          </a>
+        </p>
         <Button
           icon
           labelPosition='left'

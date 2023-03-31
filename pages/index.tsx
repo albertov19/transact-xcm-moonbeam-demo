@@ -140,6 +140,17 @@ const XCMTransactorDemo = () => {
         <h3>Connect Metamask and Provide: WsEndpoint, XC-20 Address and Transfer Destination Address on Manta</h3>
       )}
       <br />
+      <p>
+        You can get xcMANTA from our Uniswap V2 Fork for TestNet and swapping for DEV &nbsp;
+        <a href='https://moonbeam-swap.netlify.app/#/swap'>here</a>
+        <br />
+        DEV Faucet &nbsp;
+        <a href='https://apps.moonbeam.network/moonbase-alpha/faucet/'>here</a>
+        <br />
+        Don't judge the code :) as it is for demostration purposes only. You can check the source code &nbsp;
+        <a href='https://github.com/albertov19/transact-xcm-moonbeam-demo'>here</a>
+      </p>
+      <br />
     </Container>
   );
 };
