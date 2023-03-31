@@ -1,14 +1,14 @@
-# Demo dApp for the ZKHack 2023 Lisbon Hackathon
+# Demo dApp for XCM Transact on Remote Parachains
 
-This is an example application that uses XC-20s, X-Tokens and XCM Transactor to send tokens to another Parachain (Manta in the Moonbase Alpha TestNet) and does a remote XCM Transact in which tokens are transferred from a Multilocation-derivative account (of a contract) to a target address.
+This is an example application that uses XC-20s, X-Tokens and XCM Transactor to send tokens to another Parachain (Manta in the Moonbase Alpha TestNet) and does a remote XCM Transact in which tokens are transferred from a Multilocation-derivative account to a target address.
 
 ## Getting started
 
 Clone the repo:
 
 ```
-git clone https://github.com/albertov19/zkhack-moonbeam-demo
-cd zkhack-moonbeam-demo
+git clone https://github.com/albertov19/transact-xcm-moonbeam-demo
+cd transact-xcm-moonbeam-demo
 ```
 
 Install dependencies:
@@ -28,6 +28,3 @@ Start production server (localhost:3000 by default):
 ```
 yarn start
 ```
-
-10000000000
-1000000000

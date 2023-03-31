@@ -37,7 +37,7 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
       const xTokens = xTokensInstance();
 
       // X-Tokens Calldata
-      const [xTokensAmount, xTokensDestML, xTokensWeight] = await xTokensCallda();
+      const [xTokensAmount, xTokensDestML, xTokensWeight] = await xTokensCalldata();
 
       // Send XTransfer Tx
       let tx = await xTokens.transfer(xc20Address, xTokensAmount, xTokensDestML, xTokensWeight);
