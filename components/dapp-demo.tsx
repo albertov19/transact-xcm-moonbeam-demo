@@ -148,6 +148,7 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
       parents: 1,
       interior: ['0x00' + '0000' + paraID.toString(16).padStart(4, '0'), '0x01' + contractMLDA.substring(2) + '00'],
     };
+    console.log(xTokensDestML);
 
     return [xTokensAmount, xTokensDestML, xTokensWeight];
   };
@@ -184,12 +185,11 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
         <p>
           Destination Address (MultiLocation Derivative on Manta): {contractMLDA}
           <br />
-          Code for this segment is here: &nbsp;
-          <a href='https://github.com/albertov19/transact-xcm-moonbeam-demo/blob/main/components/dapp-demo.tsx#L39-L46'>
+          Code for calculating the MLD Account is&nbsp;
+          <a href='https://github.com/albertov19/transact-xcm-moonbeam-demo/blob/main/web3/calculateMLDA.tsx#L5-L25'>
             here
           </a>
         </p>
-
         <Button
           icon
           labelPosition='left'
@@ -201,13 +201,13 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
           <Icon name='arrow alternate circle right'></Icon>
           Transfer
         </Button>
-        <h4>Remote Transact on Manta</h4>
         <p>
-          Code for this segment is here: &nbsp;
-          <a href='https://github.com/albertov19/transact-xcm-moonbeam-demo/blob/main/components/dapp-demo.tsx#L61-L77'>
+          Code for X-Tokens Transfer is &nbsp;
+          <a href='https://github.com/albertov19/transact-xcm-moonbeam-demo/blob/main/components/dapp-demo.tsx#L39-L46'>
             here
           </a>
         </p>
+        <h4>Remote Transact on Manta</h4>
         <Button
           icon
           labelPosition='left'
@@ -219,13 +219,13 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
           <Icon name='microchip'></Icon>
           Transact
         </Button>
-        <h4>Batch All Actions into One Tx</h4>
         <p>
-          Code for this segment is here: &nbsp;
-          <a href='https://github.com/albertov19/transact-xcm-moonbeam-demo/blob/main/components/dapp-demo.tsx#L92-L122'>
+          Code for XCM-Transactor is &nbsp;
+          <a href='https://github.com/albertov19/transact-xcm-moonbeam-demo/blob/main/components/dapp-demo.tsx#L61-L77'>
             here
           </a>
         </p>
+        <h4>Batch All Actions into One Tx</h4>
         <Button
           icon
           labelPosition='left'
@@ -237,6 +237,12 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
           <Icon name='shipping fast'></Icon>
           Batch All!
         </Button>
+        <p>
+          Code for Batching Action is &nbsp;
+          <a href='https://github.com/albertov19/transact-xcm-moonbeam-demo/blob/main/components/dapp-demo.tsx#L92-L122'>
+            here
+          </a>
+        </p>
         <Message error header='Oops!' content={errorMessage} />
       </Form>
     </Container>
