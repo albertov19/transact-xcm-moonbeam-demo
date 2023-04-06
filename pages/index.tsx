@@ -229,7 +229,7 @@ const XCMTransactorDemo = () => {
       )}
       <br />
       <p>
-        You can get xcMANTA from our Uniswap V2 Fork for TestNet and swapping for DEV &nbsp;
+        You maybe can get XC-20s from our Uniswap V2 Fork for TestNet and swapping for DEV &nbsp;
         <a href='https://moonbeam-swap.netlify.app/#/swap'>here</a>
         <br />
         DEV Faucet &nbsp;
