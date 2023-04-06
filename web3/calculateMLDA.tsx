@@ -2,7 +2,7 @@ import { polkadotProvider } from './polkadotAPI';
 import { MultiLocation } from '@polkadot/types/interfaces';
 import { u8aToHex } from '@polkadot/util';
 
-export async function calculateMLDA(contractAddress, api, accountLength) {
+export async function calculateMLDA(address, api, accountLength) {
   // Calculate Multilocation Derivative Account
   const multilocation: MultiLocation = api.createType(
     'XcmV1MultiLocation',
@@ -10,7 +10,7 @@ export async function calculateMLDA(contractAddress, api, accountLength) {
       JSON.stringify({
         parents: 1,
         interior: {
-          x2: [{ parachain: JSON.parse('1000') }, { accountKey20: { network: { any: null }, key: contractAddress } }],
+          x2: [{ parachain: JSON.parse('1000') }, { accountKey20: { network: { any: null }, key: address } }],
         },
       })
     )
