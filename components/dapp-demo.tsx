@@ -7,7 +7,7 @@ import xcmTransactorInstance from '../web3/xcmTransactor';
 import xc20Instance from '../web3/xc-20';
 import batchInstance from '../web3/batch';
 
-const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
+const DemoComponent = ({ account, wsEndpoint, networkInfo, xc20Address, destAddress, amount }) => {
   // Variables
   const [contractMLDA, setContractMLDA] = useState('');
   const [api, setAPI] = useState();
@@ -22,7 +22,7 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
       setAPI(api);
 
       // Calculate Contract MLD Account
-      const mldAccount = await calculateMLDA(account, api);
+      const mldAccount = await calculateMLDA(account, api, networkInfo.accountProperties.accountLength);
       setContractMLDA(mldAccount);
       setButtonDisabled(false);
     };
@@ -63,7 +63,6 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
       // Get XCM-Transactor Calldata
       const [transactDestML, transactWeight, transactCalldata, transactorFeeAmount, overallWeight] =
         await xcmTransactorCalldata();
-      console.log(transactDestML, transactWeight, transactCalldata, transactorFeeAmount, overallWeight);
 
       // Send remoteTransact Tx
       let tx = await xcmTransactor.transactThroughSigned(
@@ -76,7 +75,6 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
       );
       await tx.wait();
     } catch (err) {
-      console.log(err.message);
       setErrorMessage(err.message);
     }
 
@@ -130,7 +128,7 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
   const xTokensCalldata = async () => {
     // X-Tokens Function Input
     const decimals = await xc20Instance(xc20Address).decimals();
-    const xTokensAmount = BigInt(1.1 * 10 ** decimals);
+    const xTokensAmount = (BigInt(11) * amount) / BigInt(10);
     const xTokensWeight = BigInt(4000000000);
 
     // Get Parachain ID for Multilocation
@@ -146,9 +144,11 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
     // -> The Last 00 is Account Type Any
     const xTokensDestML = {
       parents: 1,
-      interior: ['0x00' + '0000' + paraID.toString(16).padStart(4, '0'), '0x01' + contractMLDA.substring(2) + '00'],
+      interior: [
+        '0x00' + '0000' + paraID.toString(16).padStart(4, '0'),
+        networkInfo.accountProperties.accountSelector + contractMLDA.substring(2) + '00',
+      ],
     };
-    console.log(xTokensDestML);
 
     return [xTokensAmount, xTokensDestML, xTokensWeight];
   };
@@ -156,10 +156,10 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
   const xcmTransactorCalldata = async () => {
     // Transfer Amount
     const decimals = await xc20Instance(xc20Address).decimals();
-    const amount = BigInt(1 * 10 ** decimals);
-    const transactWeight = BigInt(4000000000);
-    const transactorFeeAmount = BigInt(0.0001 * 10 ** decimals);
-    const overallWeight = BigInt(50000000000);
+    const transferAmount = BigInt(amount);
+    const transactWeight = BigInt(1000000000);
+    const transactorFeeAmount = BigInt(0.001 * 10 ** decimals);
+    const overallWeight = BigInt(5000000000);
 
     // XCM-Transactor Function Input
     // Get Parachain ID for Multilocation
@@ -172,7 +172,7 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
     const transactDestML = { parents: 1, interior: ['0x00' + '0000' + paraID.toString(16).padStart(4, '0')] };
 
     // Get Transact Call Data
-    const balanceTransferTx = await (api as any).tx.balances.transfer(destAddress, amount);
+    const balanceTransferTx = await (api as any).tx.balances.transfer(destAddress, transferAmount);
     const transactCalldata = balanceTransferTx.method.toHex();
 
     return [transactDestML, transactWeight, transactCalldata, transactorFeeAmount, overallWeight];
@@ -181,9 +181,9 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
   return (
     <Container>
       <Form error={!!{ errorMessage }.errorMessage}>
-        <h4>Transfer XC-20 to MLD Account on Manta</h4>
+        <h4>Transfer XC-20 to MLD Account on {networkInfo.name}</h4>
         <p>
-          Destination Address (MultiLocation Derivative on Manta): {contractMLDA}
+          Destination Address (MultiLocation Derivative on {networkInfo.name}): {contractMLDA}
           <br />
           Code for calculating the MLD Account is&nbsp;
           <a href='https://github.com/albertov19/transact-xcm-moonbeam-demo/blob/main/web3/calculateMLDA.tsx#L5-L25'>
@@ -207,7 +207,7 @@ const DemoComponent = ({ account, wsEndpoint, xc20Address, destAddress }) => {
             here
           </a>
         </p>
-        <h4>Remote Transact on Manta</h4>
+        <h4>Remote Transact on {networkInfo.name}</h4>
         <Button
           icon
           labelPosition='left'

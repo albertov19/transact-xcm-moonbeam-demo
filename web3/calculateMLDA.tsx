@@ -2,7 +2,7 @@ import { polkadotProvider } from './polkadotAPI';
 import { MultiLocation } from '@polkadot/types/interfaces';
 import { u8aToHex } from '@polkadot/util';
 
-export async function calculateMLDA(contractAddress, api) {
+export async function calculateMLDA(contractAddress, api, accountLength) {
   // Calculate Multilocation Derivative Account
   const multilocation: MultiLocation = api.createType(
     'XcmV1MultiLocation',
@@ -22,5 +22,5 @@ export async function calculateMLDA(contractAddress, api) {
     ...multilocation.toU8a(),
   ]);
 
-  return u8aToHex(api.registry.hash(toHash).slice(0, 32));
+  return u8aToHex(api.registry.hash(toHash).slice(0, accountLength));
 }

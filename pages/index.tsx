@@ -1,19 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Button, Menu, Icon, Input } from 'semantic-ui-react';
+import { Container, Button, Menu, Icon, Input, Form, Message, Label } from 'semantic-ui-react';
 import Head from 'next/head';
 import Link from 'next/link';
 import * as ethers from 'ethers';
 import detectEthereumProvider from '@metamask/detect-provider';
 import DemoComponent from '../components/dapp-demo';
+import { polkadotProvider } from '../web3/polkadotAPI';
 
 const XCMTransactorDemo = () => {
   // Initial State
   const [account, setAccount] = useState('Not Connected');
   const [connected, setConnected] = useState(false);
+  const [connectedAPI, setConnectedAPI] = useState(false);
   const [networkName, setNetworkName] = useState('Not Connected');
   const [wsEndpoint, setWsEndpoint] = useState('');
   const [xc20Address, setXC20Address] = useState('');
   const [destAddress, setDestAddress] = useState('');
+  const [amount, setAmount] = useState(BigInt(0));
+  const [networkInfo, setNetworkInfo] = useState({
+    name: '',
+    decimals: 0,
+    accountProperties: {},
+    tokenSymbol: '',
+    ss58Format: '',
+  });
 
   useEffect(() => {
     async () => {
@@ -71,6 +81,40 @@ const XCMTransactorDemo = () => {
     await checkMetamask();
   };
 
+  const getNetworkInfo = async () => {
+    setConnectedAPI(false);
+    // Get Network Data
+    try {
+      if (wsEndpoint) {
+        const api = await polkadotProvider(wsEndpoint);
+        const name = (await api.rpc.system.chain()).toString();
+        const decimals = (await api.registry.chainDecimals)[0];
+        const tokenSymbol = (await api.registry.chainTokens)[0];
+        const ss58Format = await await api.registry.chainSS58;
+        let accountProperties = { accountLength: 0, accountSelector: '' };
+        if (ss58Format > 1000) {
+          accountProperties.accountLength = 20;
+          accountProperties.accountSelector = '0x03';
+        } else {
+          accountProperties.accountLength = 32;
+          accountProperties.accountSelector = '0x01';
+        }
+
+        setNetworkInfo({
+          name: name,
+          decimals: decimals,
+          accountProperties: accountProperties,
+          tokenSymbol: tokenSymbol,
+          ss58Format: ss58Format,
+        });
+
+        setConnectedAPI(true);
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
   return (
     <Container>
       <Head>
@@ -106,38 +150,82 @@ const XCMTransactorDemo = () => {
         placeholder='WS Endpoint...'
         onChange={(input) => {
           setWsEndpoint(input.target.value);
+          setConnectedAPI(false);
         }}
       />
-      <i>Manta endpoint for Testnet is: wss://c1.manta.moonsea.systems</i>
-      <br />
-      <br />
-      <Input
-        fluid
-        label={{ content: 'Enter XC-20 Address:' }}
-        placeholder='XC-20 Address...'
-        onChange={(input) => {
-          setXC20Address(input.target.value);
-        }}
-      />
-      <i>Manta XC-20 Address on Moonbase Alpha is: 0xfFFffFFf7D3875460d4509eb8d0362c611B4E841</i>
-      <br />
-      <br />
-      <Input
-        fluid
-        label={{ content: 'Enter Parachain Balance Transfer Dest Address:' }}
-        placeholder='Transfer Dest Address...'
-        onChange={(input) => {
-          setDestAddress(input.target.value);
-        }}
-      />
-      <i>Demo Address for Transfer is: dfbrJKcsxJMABUnuNq5h625HJMq1WehaNxR6Hz5twJorVSWAT</i>
-
-      <br />
-      <br />
-      {{ connected }.connected && wsEndpoint && xc20Address && destAddress ? (
-        <DemoComponent account={account} wsEndpoint={wsEndpoint} xc20Address={xc20Address} destAddress={destAddress} />
+      {{ connectedAPI }.connectedAPI ? (
+        <i>
+          Network Name: {networkInfo.name} - Token Symbol: {networkInfo.tokenSymbol} - Decimals: {networkInfo.decimals}{' '}
+          - SS58 Format: {networkInfo.ss58Format}
+        </i>
       ) : (
-        <h3>Connect Metamask and Provide: WsEndpoint, XC-20 Address and Transfer Destination Address on Manta</h3>
+        ''
+      )}
+      <br />
+      {{ connectedAPI }.connectedAPI ? (
+        <Button floated='right' icon labelPosition='left' color='green'>
+          <Icon name='check'></Icon>
+          Connected
+        </Button>
+      ) : (
+        <Button icon labelPosition='left' color='orange' onClick={getNetworkInfo} floated='right'>
+          <Icon name='plus square'></Icon>
+          Connect WS
+        </Button>
+      )}
+      <br />
+      <br />
+      <br />
+      {{ connectedAPI }.connectedAPI ? (
+        <Container>
+          <Input
+            fluid
+            label={{ content: 'Enter XC-20 Address:' }}
+            placeholder='XC-20 Address...'
+            onChange={(input) => {
+              setXC20Address(input.target.value);
+            }}
+          />
+          <br />
+          <Input
+            fluid
+            label={{ content: 'Enter Parachain Balance Transfer Dest Address:' }}
+            placeholder='Transfer Dest Address...'
+            onChange={(input) => {
+              setDestAddress(input.target.value);
+            }}
+          />
+          <br />
+          <Input
+            fluid
+            labelPosition='right'
+            type='text'
+            placeholder='Transfer Amount...'
+            onChange={(input) => {
+              const amount = BigInt(Number(input.target.value) * 10 ** networkInfo.decimals);
+              setAmount(amount);
+            }}
+          >
+            <Label>Enter Transfer Amount:</Label>
+            <input />
+            <Label>{networkInfo.tokenSymbol}</Label>
+          </Input>
+          <br />
+          {{ connected }.connected && xc20Address && destAddress ? (
+            <DemoComponent
+              account={account}
+              wsEndpoint={wsEndpoint}
+              networkInfo={networkInfo}
+              xc20Address={xc20Address}
+              destAddress={destAddress}
+              amount={amount}
+            />
+          ) : (
+            <h3>Connect Metamask and Provide XC-20 Address and Transfer Destination Address on Manta</h3>
+          )}
+        </Container>
+      ) : (
+        <h3>Provide WsEndpoint of Target Parachain</h3>
       )}
       <br />
       <p>
